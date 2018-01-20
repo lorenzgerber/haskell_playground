@@ -3,7 +3,7 @@ import Data.List
 import Data.Ord
 
 hoursMinutesToMinutes :: (Integer, Integer) -> Integer
-hoursMinutesToMinutes (h,m) = h * 60 + m) 
+hoursMinutesToMinutes (h,m) = h * 60 + m
 
 minutesToHoursMinutes :: Integer -> (Integer, Integer)
 minutesToHoursMinutes m = (div m 60, mod m 60)
