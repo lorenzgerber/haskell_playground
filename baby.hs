@@ -2,6 +2,12 @@ import Register
 import Data.List
 import Data.Ord
 
+hoursMinutesToMinutes :: (Integer, Integer) -> Integer
+hoursMinutesToMinutes (h,m) = h * 60 + m) 
+
+minutesToHoursMinutes :: Integer -> (Integer, Integer)
+minutesToHoursMinutes m = (div m 60, mod m 60)
+
 extractIncoming :: ([Char], Bool, (Integer, Integer)) -> Bool
 extractIncoming (_,a,(_,_)) = a
 
