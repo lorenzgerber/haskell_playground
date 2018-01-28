@@ -20,14 +20,25 @@ timeAdd :: Time -> Time -> Time
 timeSub :: Time -> Time -> Time
 (a, b) `timeSub` (c, d) = (a - c + div (b-d) 60, mod (b - d) 60) 
 
+first [] = []
+first (x:xs) = x:second xs
+
+second [] = []
+second (x:xs) = first xs
+
+testSum :: [PhusEntry] -> [PhusEntry]
+testSum a = zipWith subTime (second a) (first a)
+
+subTime :: PhusEntry -> PhusEntry -> PhusEntry
+subTime (a,b,c) (d,e,f) = (d, b, c `timeSub` f)
+
 sumTime :: PhusEntry -> PhusEntry -> PhusEntry
-sumTime (a,b,c) (d,e,f)
-    | e == True = (d, b, c `timeSub` f)
-    | e == False = (d, b, c `timeAdd` f) 
+sumTime (a,b,c) (d,e,f) = (d, b, c `timeAdd` f) 
 
 getSummedList :: [PhusEntry] -> [RegTime]
 getSummedList a = map (\(a,b,c)->(a,c)) $
                   map (foldl sumTime ([],True, (0,0))) $
+                  map testSum $
                   groupBy (\a b -> getReg a == getReg b) $
                   sortBy (comparing getReg) a
 
