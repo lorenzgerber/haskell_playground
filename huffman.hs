@@ -12,7 +12,7 @@ counts = map (numTimesFound numbers) (nub numbers)
 backChar = [ toEnum x :: Char | x <- (nub numbers)]
 zipped = zip counts backChar
 
-data Htree = Leaf Char | Branch Htree Htree
+data Htree = Leaf Char | Branch Htree Htree deriving (Show)
 
 data Wtree = L Int Char | B Int Wtree Wtree deriving (Show)
 
@@ -37,7 +37,9 @@ processList :: [Wtree] -> Wtree
 processList [x] = x
 processList (x:xs) = processList (sortBy (comparing getWeight) ((addTrees x (head xs)):(tail xs)))
 
-
+removeWeights :: Wtree -> Htree
+removeWeights (B a b c) = (Branch (removeWeights b) (removeWeights c))
+removeWeights (L a b) = (Leaf b)
 
 
   
