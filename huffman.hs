@@ -2,7 +2,9 @@ import Data.List
 import Data.Char
 import Data.Ord
 
-testText = "This is a lousy text"
+testText = "This is a lousy text and i want to have a really nice and new one very very very soon please!"
+
+testText2 = "aaaaaaaaaaaa"
 
 numbers = map fromEnum testText
 
@@ -41,5 +43,13 @@ removeWeights :: Wtree -> Htree
 removeWeights (B a b c) = (Branch (removeWeights b) (removeWeights c))
 removeWeights (L a b) = (Leaf b)
 
+getBinary :: Char -> Htree -> [Int]
+getBinary a (Leaf b) = [0]
+getBinary a b = getBinary' a [] b 
 
-  
+getBinary' :: Char -> [Int] -> Htree -> [Int]
+getBinary' c x (Branch l r) = getBinary' c (x++[0]) l ++ getBinary' c (x++[1]) r
+getBinary' c x (Leaf a)
+    | c == a = x
+    | otherwise = []
+ 
