@@ -43,13 +43,21 @@ removeWeights :: Wtree -> Htree
 removeWeights (B a b c) = (Branch (removeWeights b) (removeWeights c))
 removeWeights (L a b) = (Leaf b)
 
-getBinary :: Char -> Htree -> [Int]
-getBinary a (Leaf b) = [0]
-getBinary a b = getBinary' a [] b 
+getBinary :: Htree -> Char -> [Int]
+getBinary (Leaf a) b = [0]
+getBinary a b = getBinary' b [] a 
 
 getBinary' :: Char -> [Int] -> Htree -> [Int]
 getBinary' c x (Branch l r) = getBinary' c (x++[0]) l ++ getBinary' c (x++[1]) r
 getBinary' c x (Leaf a)
     | c == a = x
     | otherwise = []
+
+loadedTree = removeWeights $ processList $ sortedListOfWtree
+
+encode :: String -> [Int]
+encode xs = foldl (\acc x -> acc ++ getBinary loadedTree x) [] xs
  
+encode2 :: String -> [Int]
+encode2 xs = foldr (\x acc ->  getBinary loadedTree x ++ acc) [] xs
+
