@@ -56,8 +56,20 @@ getBinary' c x (Leaf a)
 loadedTree = removeWeights $ processList $ sortedListOfWtree
 
 encode :: String -> [Int]
-encode xs = foldl (\acc x -> acc ++ getBinary loadedTree x) [] xs
+encode xs = foldr (\x acc ->  getBinary loadedTree x ++ acc) [] xs
+
+encoded = encode testText
+
+decode :: Htree -> [Int] -> String
+decode a b = decode' a a [] b
+
+decode' :: Htree -> Htree -> String -> [Int] -> String
+decode' a b c [] = reverse c 
+decode' a (Branch l r) c (x:xs)
+    | x == 0 = decode' a l c xs 
+    | x == 1 = decode' a r c xs
+decode' a (Leaf b) c d = decode' a a (b:c) d
+
  
-encode2 :: String -> [Int]
-encode2 xs = foldr (\x acc ->  getBinary loadedTree x ++ acc) [] xs
+
 
