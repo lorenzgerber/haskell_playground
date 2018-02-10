@@ -5,7 +5,11 @@ import Data.Ord
 testText = "This is a lousy text and i want to have a really nice and new one very very very soon please!"
 
 data Htree = Leaf Char | Branch Htree Htree deriving (Show)
-data Wtree = L Int Char | B Int Wtree Wtree deriving (Show)
+data Wtree = L Int Char | B Int Wtree Wtree deriving (Show, Ord)
+
+instance Eq Wtree where
+    x == y = getWeight x == getWeight y
+
 
 statistics :: String -> [(Int, Char)]
 statistics a = zip (map (timesFound (map fromEnum a)) (nub (map fromEnum a))) [ toEnum  x :: Char | x <- (nub (map fromEnum a))] 
@@ -14,7 +18,7 @@ timesFound :: Eq a => [a] -> a -> Int
 timesFound xs a = (length . filter (==a)) xs 
 
 maketree :: [(Int, Char)] -> Htree
-maketree a = maketree' $ sortBy (comparing getWeight) $ map (\(a, b) -> (L a b)) a  
+maketree a = maketree' $ sort $ map (\(a, b) -> (L a b)) a  
 
 maketree' :: [Wtree] -> Htree
 maketree' [x] = maketree'' x
