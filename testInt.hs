@@ -1,8 +1,13 @@
+module Huffman
+( statistics,
+  encode,
+  decode
+) where
+
+
 import Data.List
 import Data.Char
 import Data.Ord
-
-testText = "This is a lousy text and i want to have a really nice and new one very very very soon please!"
 
 data Htree = Leaf Char | Branch Htree Htree deriving (Show)
 data Wtree = L Int Char | B Int Wtree Wtree deriving (Show, Ord)
@@ -10,14 +15,14 @@ data Wtree = L Int Char | B Int Wtree Wtree deriving (Show, Ord)
 instance Eq Wtree where
     x == y = getWeight x == getWeight y
 
-statistics :: String -> [(Int, Char)]
-statistics a = zip (map (timesFound (map fromEnum a)) (nub (map fromEnum a))) [ toEnum  x :: Char | x <- (nub (map fromEnum a))] 
+statistics :: String -> [(Integer, Char)]
+statistics a = zip (map (timesFound (map fromEnum a)) (nub (map fromEnum a))) [ toEnum x :: Char | x <- (nub (map fromEnum a))]
 
-timesFound :: Eq a => [a] -> a -> Int
-timesFound xs a = (length . filter (==a)) xs 
+timesFound :: Eq a => [a] -> a -> Integer
+timesFound xs a = toInteger $ (length . filter (==a)) xs
 
-maketree :: [(Int, Char)] -> Htree
-maketree a = maketree' $ sort $ map (\(a, b) -> (L a b)) a  
+maketree :: [(Integer, Char)] -> Htree
+maketree a = maketree' $ sort $ map (\(a, b) -> (L (fromIntegral a) b)) a  
 
 maketree' :: [Wtree] -> Htree
 maketree' [x] = maketree'' x
@@ -37,30 +42,28 @@ addNode (B a b c) (L d e) = B (a + d) (B a b c) (L d e)
 addNode (L a b) (B c d e) = B (a + c) (L a b) (B c d e)
 addNode (B a b c) (B e f g) = B (a + e) (B a b c) (B e f g)
 
-encode :: String -> (Htree, [Int])
+encode :: String -> (Htree, [Integer])
 encode a = (huffTree, foldr (\x acc -> getBinary huffTree x ++ acc) [] a)
     where huffTree = maketree  $ statistics a
 
-getBinary :: Htree -> Char -> [Int]
+getBinary :: Htree -> Char -> [Integer]
 getBinary (Leaf a) b = [0]
 getBinary a b = getBinary' b [] a 
 
-getBinary' :: Char -> [Int] -> Htree -> [Int]
+getBinary' :: Char -> [Integer] -> Htree -> [Integer]
 getBinary' c x (Branch l r) = getBinary' c (x++[0]) l ++ getBinary' c (x++[1]) r
 getBinary' c x (Leaf a)
     | c == a = x
     | otherwise = []
 
-decode :: Htree -> [Int] -> String
+decode :: Htree -> [Integer] -> String
 decode a b = decode' a a [] b
 
-decode' :: Htree -> Htree -> String -> [Int] -> String
-decode' a b c [] = reverse c 
+decode' :: Htree -> Htree -> String -> [Integer] -> String
+decode' (Leaf a) (Leaf b) c [] = reverse c
+decode' a (Leaf b) c [] = reverse (b:c)
+decode' (Leaf a) (Leaf b) c (x:xs) = decode' (Leaf a) (Leaf b) (b:c) xs
 decode' a (Branch l r) c (x:xs)
     | x == 0 = decode' a l c xs 
     | x == 1 = decode' a r c xs
 decode' a (Leaf b) c d = decode' a a (b:c) d
-
- 
-
-
