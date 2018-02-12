@@ -41,8 +41,8 @@ timesFound xs a = toInteger $ (length . filter (==a)) xs
 maketree :: [(Integer, Char)] -> Htree
 maketree a = maketree' $ sort $ map (\(a, b) -> (L (fromIntegral a) b)) a  
 
--- |The "maketree'" helper function is a recursive function that connects
--- the Wtree elements to a connected tree using the 'addNode' helper function.
+-- |The recursive "maketree'" helper function connects the Wtree 
+-- elements to a connected tree using the 'addNode' helper function.
 -- If only one Wtree element is left in the provided list, the next level
 -- of maketree helper function, "maketree''" is called. 
 maketree' :: [Wtree] -> Htree
