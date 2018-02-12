@@ -1,5 +1,6 @@
 module Huffman
 ( statistics,
+  maketree,
   encode,
   decode
 ) where
@@ -25,7 +26,7 @@ instance Eq Wtree where
 -- character in a string. A helper function (timesFound) is used
 -- to count the occurences of each character. 
 statistics :: String -> [(Integer, Char)]
-statistics a = zip (map (timesFound (map fromEnum a)) (nub (map fromEnum a))) [ toEnum x :: Char | x <- (nub (map fromEnum a))]
+statistics a = zip (map (timesFound (map fromEnum a)) (nub (map fromEnum a))) $ nub a
 
 -- |Helper function 'timesFound' to determine the number of occurences
 -- of a specific value in a list. 
@@ -40,13 +41,13 @@ timesFound xs a = toInteger $ (length . filter (==a)) xs
 maketree :: [(Integer, Char)] -> Htree
 maketree a = maketree' $ sort $ map (\(a, b) -> (L (fromIntegral a) b)) a  
 
--- |The "maketree'" helper function is a recursive function that connects
--- the Wtree elements to a connected tree using the 'addNode' helper function.
+-- |The recursive "maketree'" helper function connects the Wtree 
+-- elements to a connected tree using the 'addNode' helper function.
 -- If only one Wtree element is left in the provided list, the next level
 -- of maketree helper function, "maketree''" is called. 
 maketree' :: [Wtree] -> Htree
 maketree' [x] = maketree'' x
-maketree' (x:xs) = maketree' (sortBy (comparing getWeight) ((addNode x (head xs)):(tail xs)))
+maketree' (x:xs) = maketree' (sort ((addNode x (head xs)):(tail xs)))
 
 -- |The recursive "maketree''" helper function converts a Wtree into a Htree
 -- by removing all weights. 
