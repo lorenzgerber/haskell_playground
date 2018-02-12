@@ -1,6 +1,5 @@
 module Huffman
-( statistics,
-  maketree,
+( Htree,
   encode,
   decode
 ) where
