@@ -74,6 +74,7 @@ addNode (B a b c) (B e f g) = B (a + e) (B a b c) (B e f g)
 -- string to obtain a pair with a Htree and a list containing the 
 -- actual binary coded huffman code of the initial string. 
 encode :: String -> (Htree, [Integer])
+encode "" = error "Empty string is not allowed, provide a valid string"
 encode a = (huffTree, foldr (\x acc -> getBinary huffTree x ++ acc) [] a)
     where huffTree = maketree  $ statistics a
 
