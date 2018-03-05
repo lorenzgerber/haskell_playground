@@ -63,10 +63,10 @@ getWeight (B a _ _) = a
 -- adds them to a single Wtree. The resulting Wtree weight
 -- is the sum of the two combined Wtree weight values. 
 addNode :: Wtree -> Wtree -> Wtree
-addNode (L a b) (L c d) = B (a + c) (L a b) (L c d )
-addNode (B a b c) (L d e) = B (a + d) (B a b c) (L d e)
-addNode (L a b) (B c d e) = B (a + c) (L a b) (B c d e)
-addNode (B a b c) (B e f g) = B (a + e) (B a b c) (B e f g)
+addNode (L a b) (L c d) = B (a + c) (L c d ) (L a b) 
+addNode (B a b c) (L d e) = B (a + d) (L d e) (B a b c) 
+addNode (L a b) (B c d e) = B (a + c) (B c d e) (L a b) 
+addNode (B a b c) (B e f g) = B (a + e) (B e f g) (B a b c) 
 
 -- |The 'encode' function takes a string and uses the statistics and
 -- maketree function to construct the corresponding Huffman coding 
