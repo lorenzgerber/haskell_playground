@@ -9,6 +9,15 @@ reverser' xs ys
     | length xs == 1 = xs++ys
     | otherwise = reverser' (tail xs) ((head xs):ys)
 
+-- |Tail recursive, integrated helper function
+revTR:: (Ord a) => [a] -> [a]
+revTR [] = []
+revTR (x:xs) = reverser' xs [x]
+    where 
+        revTR' xs ys | length xs == 1 = xs++ys 
+        revTR' (x:xs) ys               = revTR' xs (x:ys)
+
+
 -- |Recursive list reverser
 rev:: (Ord a) => [a] -> [a]
 rev xs
