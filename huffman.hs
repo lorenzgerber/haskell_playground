@@ -12,7 +12,7 @@ import Data.Ord
 -- |Defintion of datatypes Wtree and Htree according specifications. 
 -- Wtree (weight tree) nodes are used to contruct the huffman coding. 
 -- Htree (huffman tree) nodes represent a finished huffman tree.  
-data Wtree = L Int Char | B Int Wtree Wtree deriving (Show, Ord)
+data Wtree = L Int Char | B Int Wtree Wtree deriving (Show)
 data Htree = Leaf Char | Branch Htree Htree deriving (Show)
 
 -- |Wtree is made an instance of Eq by making the weight values
@@ -20,6 +20,9 @@ data Htree = Leaf Char | Branch Htree Htree deriving (Show)
 -- of Ord. 
 instance Eq Wtree where
     x == y = getWeight x == getWeight y
+
+instance Ord Wtree where
+    compare a b = compare (getWeight a) (getWeight b)
 
 -- |The 'statistics' function calculates the frequencies of each
 -- character in a string. A helper function (timesFound) is used
@@ -63,10 +66,10 @@ getWeight (B a _ _) = a
 -- adds them to a single Wtree. The resulting Wtree weight
 -- is the sum of the two combined Wtree weight values. 
 addNode :: Wtree -> Wtree -> Wtree
-addNode (L a b) (L c d) = B (a + c) (L c d ) (L a b) 
-addNode (B a b c) (L d e) = B (a + d) (L d e) (B a b c) 
-addNode (L a b) (B c d e) = B (a + c) (B c d e) (L a b) 
-addNode (B a b c) (B e f g) = B (a + e) (B e f g) (B a b c) 
+addNode (L a b) (L c d) = B (a + c) (L a b ) (L c d) 
+addNode (B a b c) (L d e) = B (a + d) (B a b c) (L d e) 
+addNode (L a b) (B c d e) = B (a + c) (L a b) (B c d e) 
+addNode (B a b c) (B e f g) = B (a + e) (B a b c) (B e f g) 
 
 -- |The 'encode' function takes a string and uses the statistics and
 -- maketree function to construct the corresponding Huffman coding 
