@@ -21,6 +21,9 @@ data Htree = Leaf Char | Branch Htree Htree deriving (Show)
 instance Eq Wtree where
     x == y = getWeight x == getWeight y
 
+-- |Wtree is made instance of Ord by defining the comparison
+-- to use the weights. Automatic derivation resulted in wrong
+-- comparison that included the type of Wtree.
 instance Ord Wtree where
     compare a b = compare (getWeight a) (getWeight b)
 
